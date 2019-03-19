@@ -2,9 +2,8 @@ let slots = {};
 let lastpos = {};
 
 
-var startPos = null;
-
-
+let startPos = null;
+let SLOT = document.getElementById("1").getBoundingClientRect();
 
 function setStartBlock(block_id, slot_id) {
 
@@ -15,13 +14,10 @@ function setStartBlock(block_id, slot_id) {
   let fromRect = fromBlock.getBoundingClientRect();
 
 
-  let startX = toRect["x"] - fromRect["x"] + (toRect["width"]/2 - fromRect["width"]/2);
-  let startY = toRect["y"] - fromRect["y"] + (toRect["height"]/2 - fromRect["height"]/2);
+  let startX = toRect["x"] - fromRect["x"];//+ (toRect["width"]/2 - fromRect["width"]/2);
+  let startY = toRect["y"] - fromRect["y"];// + (toRect["height"]/2 - fromRect["height"]/2);
 
-  let s = "translate(" + startX + "px, " + startY + "px)";
-
-
-  fromBlock.style.transform = s;
+  fromBlock.style.transform = "translate(" + startX + "px, " + startY + "px)";
 
   fromBlock.setAttribute('data-x', startX);
   fromBlock.setAttribute('data-y', startY);
@@ -33,8 +29,46 @@ function setStartBlock(block_id, slot_id) {
   };
 }
 
+
+function searchTrack(track_name, block_id) {
+
+  doSearch(track_name, "track").then((function (data) {
+
+    function editBlock(block_id) {
+      let b = document.getElementById(block_id);
+      let img = new Image();
+      img.onload = function() {
+        let height = img.height;
+        let width = img.width;
+        if (height > width) {
+          img.height = SLOT["height"];
+        } else {
+          img.width = SLOT["height"];
+        }
+      };
+
+      img.src = data["tracks"]["items"][0]["album"]["images"][0]["url"];
+
+      let table = makeSongBlock(data["tracks"]["items"][0], img);
+      table.width = SLOT["width"];
+      b.style.width = SLOT["width"];
+
+      b.appendChild(table);
+
+    }
+
+    editBlock(block_id);
+  }));
+}
+
+
+searchTrack("Snakes and Arrows", "block1");
+searchTrack("Beans in my ears", "block2");
+
 setStartBlock("block1", "1");
-setStartBlock("block2", "6");
+setStartBlock("block2", "2");
+
+
 
 
 interact('.block')

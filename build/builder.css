@@ -134,19 +134,25 @@ body {
   z-index: -1;
 }
 
+.blocktable {
+  padding: 0;
+  word-break: break-all;
+}
+
 .block {
   z-index: 4;
   /*position: relative;*/
   width: 100px;
   height: 100px;
-  background: rgba(150, 40, 40, .4);
+  background: rebeccapurple;
+  /*rgba(150, 40, 40, .4);*/
 }
 
 /* ==========================================================================
-   EXAMPLE Media Queries for Responsive Design.
-   These examples override the primary ('mobile first') styles.
-   Modify as content requires.
-   ========================================================================== */
+ EXAMPLE Media Queries for Responsive Design.
+ These examples override the primary ('mobile first') styles.
+ Modify as content requires.
+ ========================================================================== */
 
 @media only screen and (min-width: 35em) {
   /* Style adjustments for viewports that meet the condition */

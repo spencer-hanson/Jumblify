@@ -17,7 +17,6 @@ function doRefresh() {
     var text = window.location.href;
     var newSrc = data['access_token'];
     window.location.replace(text.replace(/(access_token=).*?(&)/,'$1' + newSrc + '$2'));
-
     // alert( "second success" );
   })
   .fail(function() {
@@ -28,24 +27,73 @@ function doRefresh() {
   });
 }
 
-function doSearch() {
+function doSearch(query, type="track") {
 
-  $.ajax({
-    url: "https://api.spotify.com/v1/search",
-    data: {
-      "q": "Clockwork Angels",
-      "type": "track"
-    },
-    success: function (response) {
-      // nothing lol
-    },
-    headers: {
-      'Authorization': 'Bearer ' + getUrlVars()['access_token']
-    }
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "https://api.spotify.com/v1/search",
+      data: {
+        "q": query,
+        "type": type
+      },
+      headers: {
+        'Authorization': 'Bearer ' + getUrlVars()['access_token']
+      },
+      success: function (response) {
+        resolve(response);
+      },
+      error: function(error) {
+        reject(error);
+      }
+    });
   });
-
 }
 
+function makeSongBlock(data, img) {
+  // data context: data["tracks"]["items"][0]
+  let table = document.createElement("table");
+  table.classList.add("blocktable");
+
+  let tr = table.insertRow();
+  let cell = tr.insertCell(0);
+  cell.setAttribute("rowSpan", "2");
+  let cell2 = tr.insertCell(1);
+  cell.appendChild(img);
+  cell2.appendChild(document.createTextNode(data["name"]));
+  let cell3 = table.insertRow().insertCell(0);
+  cell3.appendChild(document.createTextNode(data["artists"][0]["name"]));
+
+
+  // <div id="divCheckbox" style="display: none;">
+  let idDiv = document.createElement("div");
+  idDiv.style.display = "none";
+  idDiv.setAttribute("data-sid", data["id"]);
+  cell3.appendChild(idDiv);
+
+  return table;
+}
+
+function redirectTo(page) {
+  window.location = page + window.location.search;
+}
+
+
+// function addBlock()
+
+function getSongsFromTable() {
+  // console.log("Slots");
+  // console.log(slots);
+  let songsIDs = [];
+
+  for (const [key, value] of Object.entries(slots)) {
+    // console.log(key, value);
+    if (value !== undefined) {
+      let sid = document.getElementById(value).getElementsByTagName("td")[2].getElementsByTagName("div")[0].getAttribute("data-sid");
+
+      console.log(key, value, sid);
+    }
+  }
+}
 
 // Script to open and close sidebar
 function w3_open() {
